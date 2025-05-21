@@ -16,7 +16,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 atty = "0.2"
 thiserror = "1.0"
 url = "2.3"
-futile = "0.4"  # Optional utility for YAML parsing
+reqwest = { version = "0.11", features = ["json"] }
 
 [lib]
 name = "buildkite_ls"
