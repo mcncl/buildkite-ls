@@ -1,14 +1,12 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+//! Buildkite Language Server implementation
+//! Provides LSP features for Buildkite pipeline YAML files
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+mod server;
+mod schema;
+mod parser;
+mod completion;
+mod hover;
+mod diagnostics;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+// Re-export the modules needed for public API
+pub use server::Backend;
