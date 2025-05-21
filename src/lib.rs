@@ -2,8 +2,8 @@
 //! Provides LSP features for Buildkite pipeline YAML files
 
 mod server;
-mod schema;
-mod parser;
+pub mod schema;
+pub mod parser;
 mod completion;
 mod hover;
 mod diagnostics;

@@ -1,10 +1,10 @@
 //! YAML parsing and document handling
 
-use serde_json::Value;
-use serde_yaml::Mapping;
+use serde_json::Value as JsonValue;
+use serde_yaml::Value as YamlValue;
 use std::collections::HashMap;
 use tower_lsp::lsp_types::{Position, Range};
-use tracing::{debug, error};
+use tracing::info;
 
 /// Represents a node in the YAML document with position information
 #[derive(Debug, Clone, PartialEq)]
@@ -40,7 +40,7 @@ pub struct Document {
     /// The raw text of the document
     pub text: String,
     /// The parsed YAML as a serde_yaml Value
-    pub yaml: Option<Value>,
+    pub yaml: Option<YamlValue>,
     /// Root node of the document with position information
     pub root: Option<Node>,
     /// Lines in the document for position lookup
@@ -67,7 +67,7 @@ impl Document {
         self.lines = self.text.lines().map(|s| s.to_string()).collect();
         
         // Parse YAML
-        let yaml: Value = serde_yaml::from_str(&self.text)?;
+        let yaml: YamlValue = serde_yaml::from_str(&self.text)?;
         self.yaml = Some(yaml.clone());
         
         // Create the position map and node tree
@@ -93,8 +93,8 @@ impl Document {
             
             let mut root = Node {
                 node_type: match yaml {
-                    Value::Mapping(_) => NodeType::Mapping,
-                    Value::Sequence(_) => NodeType::Sequence,
+                    YamlValue::Mapping(_) => NodeType::Mapping,
+                    YamlValue::Sequence(_) => NodeType::Sequence,
                     _ => NodeType::Scalar,
                 },
                 key: None,
@@ -105,7 +105,6 @@ impl Document {
             };
             
             // Process the YAML structure
-            let mut current_line = 0;
             
             // Process lines as a simple approximation
             for (line_idx, line) in self.lines.iter().enumerate() {
@@ -136,7 +135,7 @@ impl Document {
                         value: value.clone(),
                         range: Range {
                             start: Position::new(line_num, indent),
-                            end: Position::new(line_num, (indent + key.len() + value.len() + 1) as u32),
+                            end: Position::new(line_num, indent + (key.len() as u32) + (value.len() as u32) + 1),
                         },
                         children: Vec::new(),
                         path: key,
@@ -158,7 +157,7 @@ impl Document {
                         value: value.clone(),
                         range: Range {
                             start: Position::new(line_num, indent),
-                            end: Position::new(line_num, (indent + value.len() + 1) as u32),
+                            end: Position::new(line_num, indent + (value.len() as u32) + 1),
                         },
                         children: Vec::new(),
                         path: format!("[{}]", root.children.len()),
@@ -178,7 +177,7 @@ impl Document {
     pub fn node_at_position(&self, line: u32, character: u32) -> Option<String> {
         // Find the closest node in the position map
         let candidates: Vec<_> = self.position_map.iter()
-            .filter(|((node_line, _), node)| {
+            .filter(|((_line, _), node)| {
                 let range = &node.range;
                 range.start.line <= line && range.end.line >= line &&
                 range.start.character <= character && range.end.character >= character
@@ -194,7 +193,7 @@ impl Document {
             for candidate in &candidates[1..] {
                 let area = area_of_range(&candidate.1.range);
                 if area < smallest_area {
-                    best_match = candidate;
+                    best_match = *candidate;
                     smallest_area = area;
                 }
             }

@@ -9,10 +9,10 @@ use crate::schema::BuildkiteSchema;
 pub fn provide_completion(
     document: &Document,
     position: Position,
-    schema: &BuildkiteSchema,
+    _schema: &BuildkiteSchema,
 ) -> Vec<CompletionItem> {
     // Get the context at the current position
-    let context = document.context_at_position(position.line, position.character);
+    let _context = document.context_at_position(position.line, position.character);
 
     // TODO: Generate completions based on the context and schema
     vec![]

@@ -15,7 +15,7 @@ pub fn provide_hover(
     let node = document.node_at_position(position.line, position.character)?;
 
     // Get documentation from the schema
-    let documentation = schema.get_documentation(node)?;
+    let documentation = schema.get_documentation(&node)?;
 
     // Create hover information
     Some(Hover {
