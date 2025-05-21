@@ -1,6 +1,18 @@
 [package]
 name = "buildkite-ls"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"      # Changed from 2024 as it's not a valid edition yet. 2021 is the latest stable.
 
 [dependencies]
+tower-lsp = "0.20"
+serde_yaml = "0.9"
+serde_json = "1.0"
+jsonschema = "0.17"
+regex = "1.10"
+log = "0.4"
+env_logger = "0.11"
+rayon = "1.10"
+dashmap = "5.5"
+tokio = { version = "1", features = [
+    "full",
+] } # tower-lsp often needs a tokio runtime
