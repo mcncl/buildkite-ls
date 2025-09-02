@@ -1,0 +1,28 @@
+steps:
+  - command: echo "hi"
+    key: build
+    label: "Hi"
+    plugins:
+      - docker#v5.13.0:
+          image: "node"
+          always-pull: true
+
+  - wait: ~
+    
+  - label: "Test" 
+    key: test
+    command: "go test ./..."
+    depends_on: "build"
+    plugins:
+      - docker#v5.13.0:
+          image: "node:18"
+   
+  - label: "Lint"
+    command: "go fmt ./... && go vet ./..."
+    
+  - label: "Docker Build"
+    command: "go build -o buildkite-ls"
+    depends_on: [test, build]
+    plugins:
+      - docker#v5.13.0:
+          image: "golang:1.21"
