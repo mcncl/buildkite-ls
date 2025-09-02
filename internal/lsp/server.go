@@ -1832,7 +1832,7 @@ func (s *Server) validateSingleStep(stepData map[string]interface{}, lineNum uin
 			diagnostics = append(diagnostics, protocol.Diagnostic{
 				Range: protocol.Range{
 					Start: protocol.Position{Line: lineNum, Character: 2},
-					End:   protocol.Position{Line: lineNum + 2, Character: 0},
+					End:   protocol.Position{Line: lineNum, Character: 999},
 				},
 				Severity: protocol.DiagnosticSeverityInformation,
 				Message:  fmt.Sprintf("Step %d has no explicit step type, but plugins may provide command execution via hooks", stepNumber),
@@ -1844,7 +1844,7 @@ func (s *Server) validateSingleStep(stepData map[string]interface{}, lineNum uin
 			diagnostics = append(diagnostics, protocol.Diagnostic{
 				Range: protocol.Range{
 					Start: protocol.Position{Line: lineNum, Character: 2},
-					End:   protocol.Position{Line: lineNum + 2, Character: 0},
+					End:   protocol.Position{Line: lineNum, Character: 999},
 				},
 				Severity: protocol.DiagnosticSeverityError,
 				Message:  fmt.Sprintf("Step %d must specify a step type: command, wait, block, input, trigger, or group", stepNumber),
@@ -1856,7 +1856,7 @@ func (s *Server) validateSingleStep(stepData map[string]interface{}, lineNum uin
 		diagnostics = append(diagnostics, protocol.Diagnostic{
 			Range: protocol.Range{
 				Start: protocol.Position{Line: lineNum, Character: 2},
-				End:   protocol.Position{Line: lineNum + 3, Character: 0},
+				End:   protocol.Position{Line: lineNum, Character: 999},
 			},
 			Severity: protocol.DiagnosticSeverityError,
 			Message:  fmt.Sprintf("Step %d has multiple step types - only one is allowed per step", stepNumber),
@@ -1903,7 +1903,7 @@ func (s *Server) validateSingleStep(stepData map[string]interface{}, lineNum uin
 			diagnostics = append(diagnostics, protocol.Diagnostic{
 				Range: protocol.Range{
 					Start: protocol.Position{Line: lineNum, Character: 2},
-					End:   protocol.Position{Line: lineNum + 2, Character: 0},
+					End:   protocol.Position{Line: lineNum, Character: 999},
 				},
 				Severity: protocol.DiagnosticSeverityInformation,
 				Message:  "Use 'label' instead of 'name' - 'label' is the standard Buildkite field for step display names",
@@ -2031,7 +2031,7 @@ func (s *Server) validatePluginConfigurations(pipelineData map[string]interface{
 				diagnostics = append(diagnostics, protocol.Diagnostic{
 					Range: protocol.Range{
 						Start: protocol.Position{Line: lineNum, Character: 0},
-						End:   protocol.Position{Line: lineNum + 2, Character: 0},
+						End:   protocol.Position{Line: lineNum, Character: 999},
 					},
 					Severity: protocol.DiagnosticSeverityError,
 					Message:  fmt.Sprintf("Plugin '%s' configuration error: %s", pluginRef.Name, err.Error()),
