@@ -79,10 +79,7 @@ func (s *Server) Initialize(ctx context.Context, params *protocol.InitializePara
 			HoverProvider:          true,
 			CompletionProvider:     completionOptions,
 			DocumentSymbolProvider: true,
-			SignatureHelpProvider: &protocol.SignatureHelpOptions{
-				TriggerCharacters: []string{":", " ", "\n"},
-			},
-			DefinitionProvider: true,
+			DefinitionProvider:     true,
 			CodeActionProvider: &protocol.CodeActionOptions{
 				CodeActionKinds: []protocol.CodeActionKind{
 					protocol.QuickFix,
